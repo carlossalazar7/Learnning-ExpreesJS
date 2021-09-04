@@ -11,8 +11,10 @@ router.get('/home', (req, res) => {
     });
 })
 
+//insert into table users
 router.post('/add', async (req, res) => {
     // res.json(req.body)
+    //---------------------instancia de obj-----------------
     const user = new UserModel({
         name: req.body.name,
         email: req.body.email,
@@ -37,6 +39,15 @@ router.post('/add', async (req, res) => {
         res.send(save)
     } catch (e) {
         res.send(e)
+    }
+})
+//select all
+router.get('/all', async (req, res) => {
+    const users = await UserModel.find();
+    try {
+        res.send(users);
+    } catch (error) {
+        res.send(error)
     }
 })
 

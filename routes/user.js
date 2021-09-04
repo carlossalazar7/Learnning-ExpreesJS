@@ -50,5 +50,39 @@ router.get('/all', async (req, res) => {
         res.send(error)
     }
 })
-
+//select by id
+router.get('/user/:id', async (req, res) => {
+    const id = req.params.id
+    const user = await UserModel.findById(id)
+    try {
+        res.send(user)
+    } catch (e) {
+        res.send(e)
+    }
+})
+//delete
+router.delete('/user/:id', async (req, res) => {
+    const id = req.params.id
+    const deleteuser = await UserModel.remove({
+        _id : id
+    })
+    try {
+        res.send(deleteuser)
+    } catch (e) {
+        res.send(e)
+    }
+})
+//update
+router.patch('/user/:id', async (req, res) => {
+    const id = req.params.id
+    const update = await UserModel.update(
+        {_id : id},
+        {$set: req.body}
+    )
+    try {
+        res.send(update)
+    } catch (e) {
+        res.send(e)
+    }
+})
 module.exports = router

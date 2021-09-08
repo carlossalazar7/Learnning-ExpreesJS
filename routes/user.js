@@ -3,6 +3,7 @@ const router = express.Router()
 const UserModel = require('../models/User')
 const Joi = require('@hapi/joi')
 const brycpt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 // localhost:300/api/
 
 router.get('/home', (req, res) => {
@@ -16,6 +17,11 @@ router.get('/home', (req, res) => {
 //---------------pasos para encrypar constraseñas----------------------
 /*---------------paso 1: generate  a salt -> ramdom text*/
 /*---------------paso 1: hash a password  -> hash(10, salt)*/
+
+router.get('/token', async (req, res)=>{
+    const token = jwt.sign({_id:'ds_123456'},process.env.SECRET)
+    res.send(token)
+})
 
 //insert into table users
 router.post('/add', async (req, res) => {

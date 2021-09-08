@@ -1,6 +1,7 @@
 const express = require("express")
 const router = express.Router()
 const UserModel = require('../models/User')
+const Joi = require('@hapi/joi')
 // localhost:300/api/
 
 router.get('/home', (req, res) => {
@@ -14,6 +15,15 @@ router.get('/home', (req, res) => {
 //insert into table users
 router.post('/add', async (req, res) => {
     // res.json(req.body)
+
+    const schema = {
+        name: Joi.string().min(5).required(),
+        email: Joi.string().min(5).email().required(),
+        password: Joi.string().min(6).required()
+    }   
+    const {error} = Joi.validate(req.body, schema);
+    if (error) return  res.send(error.details[0].message);  
+    
     //---------------------instancia de obj-----------------
     const user = new UserModel({
         name: req.body.name,
@@ -64,7 +74,7 @@ router.get('/user/:id', async (req, res) => {
 router.delete('/user/:id', async (req, res) => {
     const id = req.params.id
     const deleteuser = await UserModel.remove({
-        _id : id
+        _id: id
     })
     try {
         res.send(deleteuser)
@@ -76,8 +86,8 @@ router.delete('/user/:id', async (req, res) => {
 router.patch('/user/:id', async (req, res) => {
     const id = req.params.id
     const update = await UserModel.update(
-        {_id : id},
-        {$set: req.body}
+        { _id: id },
+        { $set: req.body }
     )
     try {
         res.send(update)

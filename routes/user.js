@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const UserModel = require('../models/User')
 const Joi = require('@hapi/joi')
+const brycpt = require('bcrypt')
 // localhost:300/api/
 
 router.get('/home', (req, res) => {
@@ -11,6 +12,10 @@ router.get('/home', (req, res) => {
         }
     });
 })
+
+//---------------pasos para encrypar constraseñas----------------------
+/*---------------paso 1: generate  a salt -> ramdom text*/
+/*---------------paso 1: hash a password  -> hash(10, salt)*/
 
 //insert into table users
 router.post('/add', async (req, res) => {
@@ -23,12 +28,14 @@ router.post('/add', async (req, res) => {
     }   
     const {error} = Joi.validate(req.body, schema);
     if (error) return  res.send(error.details[0].message);  
-    
+    const salt  = await brycpt.genSalt(10)
+    const hashPassword =await brycpt.hash(req.body.password, salt)
+
     //---------------------instancia de obj-----------------
     const user = new UserModel({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
+        password: hashPassword
     })
     //----------------------tercera forma--------------------
     // user.save()

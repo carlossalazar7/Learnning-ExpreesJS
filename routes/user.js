@@ -4,6 +4,7 @@ const UserModel = require('../models/User')
 const Joi = require('@hapi/joi')
 const brycpt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const verifyToken = require('./verifyjwt')
 // localhost:300/api/
 
 router.get('/home', (req, res) => {
@@ -65,7 +66,7 @@ router.post('/add', async (req, res) => {
     }
 })
 //select all
-router.get('/all', async (req, res) => {
+router.get('/all', verifyToken, async (req, res) => {
     const users = await UserModel.find();
     try {
         res.send(users);

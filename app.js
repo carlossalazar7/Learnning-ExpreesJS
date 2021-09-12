@@ -4,11 +4,15 @@ const mongoose = require('mongoose')
 const env = require('dotenv/config')
 app.use(express.json()) /*use este cuando envie por raw body */
 // app.use(express.urlencoded({ extended: true }))  /*use este cuando envie por x-www-form-urlencoded */
+
 const useRouter = require('./routes/user'); /*utilizar los routers creados en user.js*/
 app.use('/api/', useRouter)
 app.listen('3000', () => {
     console.log("The server is  running!!!");
 })
+
+const authRouter = require('./routes/auth');
+app.use('/api/auth', authRouter)
 
 mongoose.connect( /* crear conexion a mongo db */
     process.env.DB, /* esta linea manda a llamar los paramtros de conecion en el archivo .env */
